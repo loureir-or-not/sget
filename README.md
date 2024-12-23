@@ -8,9 +8,9 @@
 awesome-fetch *never* featured a Haskell-made fetch script, and I
 thought "Why not make a Haskell fetch?" and I ended up getting it
 done in 2 days. It was quite fun to learn how much I could feature
-without abusing IO. (Which while on my searchs, I found a FreeBSD
-based fetch which does abuse IO, no offense to the developer.) and I
-have to admit I am proud of how I have done!
+without abusing IO. (Which while on my searches, I found a
+FreeBSD-based fetch which does abuse IO, no offense to the
+developer.) and I have to admit I am proud of how I have done!
 
 # Is this complete?
 I want change some things around (for example, adding color and
