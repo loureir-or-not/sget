@@ -20,3 +20,8 @@ it good.
 
 However, I am happy to review pull requests and issues for those that
 can read my code... somehow! 😄
+
+# How fast is it?
+Not *blazingly fast* but it isn't noticably slow either.
+
+<img src="assets/hyperfine.png" width="500px">
