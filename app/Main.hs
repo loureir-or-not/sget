@@ -64,15 +64,15 @@ main = do
     ram <- readFile' "/proc/meminfo"
     usingWSL <- lookupEnv "WSL_DISTRO_NAME"
     putStrLn (unlines
-        [ " ⠀⠀⢀⣤⣤⣤⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀  " ++ user ++ "@" ++ filter (/='\n') hostname
-        , " ⠀⠀⢸⣿⣿⣿⣿⣿⣷⡀⠀⠀⠀⠀⠀⠀⠀  "
-        , " ⠀⠀⠘⠉⠉⠙⣿⣿⣿⣷⠀⠀⠀⠀⠀⠀⠀  " ++ "os\t    " ++ (findPrettyName . map (splitAt' '=')) (lines osRelease)
-        , " ⠀⠀⠀⠀⠀⠀⢸⣿⣿⣿⣧⠀⠀⠀⠀⠀⠀  " ++ "wm\t    " ++ xdgDesktop ++ " (" ++ xdgSession ++ ")"
-        , " ⠀⠀⠀⠀⠀⠀⣼⣿⣿⣿⣿⣆⠀⠀⠀⠀⠀  " ++ "locale  " ++ lang
-        , " ⠀⠀⠀⠀⠀⣼⣿⣿⣿⣿⣿⣿⡀⠀⠀⠀⠀  " ++ "kernel  " ++ getKernel kernel
-        , " ⠀⠀⠀⠀⣴⣿⣿⣿⠟⣿⣿⣿⣷⠀⠀⠀⠀  " ++ "uptime  " ++ getUptime uptime
-        , " ⠀⠀⠀⣰⣿⣿⣿⡏⠀⠸⣿⣿⣿⣇⠀⠀⠀  " ++ "ram\t    " ++ getRamUsage ram
-        , " ⠀⠀⢠⣿⣿⣿⡟⠀⠀⠀⢻⣿⣿⣿⡆⠀⠀  " ++ "shell   " ++ getExeNameFromPath shell
-        , " ⠀⢠⣿⣿⣿⡿⠀⠀⠀⠀⠀⢿⣿⣿⣷⣤⡄  " ++ "editor  " ++ getExeNameFromPath editor
-        , " ⢀⣾⣿⣿⣿⠁⠀⠀⠀⠀⠀⠈⠿⣿⣿⣿⡇  " ++ wslCheck usingWSL
+        [ " \x1b[1;35m⠀⠀⢀⣤⣤⣤⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀\x1b[1;39m  " ++ user ++ "@" ++ filter (/='\n') hostname
+        , " \x1b[1;35m⠀⠀⢸⣿⣿⣿⣿⣿⣷⡀⠀⠀⠀⠀⠀⠀⠀\x1b[1;39m  "
+        , " \x1b[1;35m⠀⠀⠘⠉⠉⠙⣿⣿⣿⣷⠀⠀⠀⠀⠀⠀⠀\x1b[1;39m  " ++ "os\t    " ++ (findPrettyName . map (splitAt' '=')) (lines osRelease)
+        , " \x1b[1;35m⠀⠀⠀⠀⠀⠀⢸⣿⣿⣿⣧⠀⠀⠀⠀⠀⠀\x1b[1;39m  " ++ "wm\t    " ++ xdgDesktop ++ " (" ++ xdgSession ++ ")"
+        , " \x1b[1;35m⠀⠀⠀⠀⠀⠀⣼⣿⣿⣿⣿⣆⠀⠀⠀⠀⠀\x1b[1;39m  " ++ "locale  " ++ lang
+        , " \x1b[1;35m⠀⠀⠀⠀⠀⣼⣿⣿⣿⣿⣿⣿⡀⠀⠀⠀⠀\x1b[1;39m  " ++ "kernel  " ++ getKernel kernel
+        , " \x1b[1;35m⠀⠀⠀⠀⣴⣿⣿⣿⠟⣿⣿⣿⣷⠀⠀⠀⠀\x1b[1;39m  " ++ "uptime  " ++ getUptime uptime
+        , " \x1b[1;35m⠀⠀⠀⣰⣿⣿⣿⡏⠀⠸⣿⣿⣿⣇⠀⠀⠀\x1b[1;39m  " ++ "ram\t    " ++ getRamUsage ram
+        , " \x1b[1;35m⠀⠀⢠⣿⣿⣿⡟⠀⠀⠀⢻⣿⣿⣿⡆⠀⠀\x1b[1;39m  " ++ "shell   " ++ getExeNameFromPath shell
+        , " \x1b[1;35m⠀⢠⣿⣿⣿⡿⠀⠀⠀⠀⠀⢿⣿⣿⣷⣤⡄\x1b[1;39m  " ++ "editor  " ++ getExeNameFromPath editor
+        , " \x1b[1;35m⢀⣾⣿⣿⣿⠁⠀⠀⠀⠀⠀⠈⠿⣿⣿⣿⡇\x1b[1;39m  " ++ wslCheck usingWSL
         ])
