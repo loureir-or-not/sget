@@ -1,7 +1,7 @@
 <div style='text-align: center;'>
     <h1>sget - system get</h1>
     <h6>A system fetch utility written in Haskell.</h6>
-    <img src=".github/assets/screenshot.png" width="400px">
+    <img src="assets/screenshot.png" width="400px">
 </div>
 
 # Why is this?
