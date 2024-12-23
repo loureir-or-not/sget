@@ -1,8 +1,8 @@
 module Main where
 import           Data.List          (elemIndex)
+import           GHC.Base           (divInt)
 import           System.Environment (lookupEnv)
 import           System.IO          (readFile')
-import GHC.Base (divInt)
 
 unknownOrString :: Maybe String -> String
 unknownOrString (Just val) = val
@@ -26,7 +26,7 @@ findPrettyName (x:xs)
     | otherwise = findPrettyName xs
 
 getUptime :: String -> String
-getUptime "" = "0 seconds"
+getUptime ""      = "0 seconds"
 getUptime seconds = (head . words) seconds
 
 getKernel :: String -> String
@@ -43,10 +43,10 @@ getRamUsage usage = show memUsed ++ "MB / " ++ show memTotal ++ "MB"
         memTotal = parseKB ((snd . head) usageAsKvPairs) `divInt` 1000
 
 getExeNameFromPath :: String -> String
-getExeNameFromPath = reverse . (takeWhile (/='/') . reverse) 
+getExeNameFromPath = reverse . (takeWhile (/='/') . reverse)
 
 wslCheck :: Maybe String -> String
-wslCheck Nothing = ""
+wslCheck Nothing  = ""
 wslCheck (Just _) = "Hey! I am using WSL!"
 
 main :: IO ()

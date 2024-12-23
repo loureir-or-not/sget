@@ -1,12 +1,22 @@
-> [!IMPORTANT]
-> WIP - THIS IS NOT AT ALL PRODUCTION-READY AND ONLY SERVES AS AN IDEA
-
-<div style="text-align: center;">
+<div style='text-align: center;'>
     <h1>sget - system get</h1>
     <h6>A system fetch utility written in Haskell.</h6>
+    <img src=".github/assets/screenshot.png" width="400px">
 </div>
 
 # Why is this?
-I was thinking of ways to reduce the IO monad in Haskell, and using
-MonadIO for something like this seemed like the best approach. But,
-I did want to test out the idea
+awesome-fetch *never* featured a Haskell-made fetch script, and I
+thought "Why not make a Haskell fetch?" and I ended up getting it
+done in 2 days. It was quite fun to learn how much I could feature
+without abusing IO. (Which while on my searchs, I found a FreeBSD
+based fetch which does abuse IO, no offense to the developer.) and I
+have to admit I am proud of how I have done!
+
+# Is this complete?
+I want change some things around (for example, adding color and
+displaying uptime in HH:MM:SS), and I will change them if I have the
+time. I have already achieved a product, now it's just about making
+it good.
+
+However, I am happy to review pull requests and issues for those that
+can read my code... somehow! 😄
