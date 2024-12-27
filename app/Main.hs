@@ -1,6 +1,5 @@
 module Main where
 import           Data.List          (elemIndex)
-import           GHC.Base           (divInt)
 import           System.Environment (lookupEnv)
 import           System.IO          (readFile')
 
@@ -22,28 +21,28 @@ splitAt' s xs = case elemIndex s xs of
 findPrettyName :: [(String, String)] -> String
 findPrettyName [] = "Generic Linux"
 findPrettyName (x:xs)
-    | fst x == "PRETTY_NAME" = (init . (tail . tail)) (snd x)
+    | fst x == "PRETTY_NAME" = init . tail . tail $ snd x
     | otherwise = findPrettyName xs
 
 getUptime :: String -> String
 getUptime ""      = "0 seconds"
-getUptime seconds = (head . words) seconds
+getUptime seconds = (head . words $ seconds) ++ " seconds"
 
 getKernel :: String -> String
-getKernel = (\l -> head l ++ " " ++ l !! 2) . words
+getKernel = (\l -> head l ++ " " ++ (head . tail) l) . words
 
 parseKB :: String -> Int
-parseKB size = (read . head) $ (tail . words) size :: Int
+parseKB size = read . head . tail . words $ size :: Int
 
 getRamUsage :: String -> String
-getRamUsage usage = show memUsed ++ "MB / " ++ show memTotal ++ "MB"
+getRamUsage usage = show memUsed ++ "MB/" ++ show memTotal ++ "MB"
     where
         usageAsKvPairs = map (splitAt' ':') (lines usage)
-        memUsed = memTotal - parseKB ((snd . (head . tail)) usageAsKvPairs) `divInt` 1000
-        memTotal = parseKB ((snd . head) usageAsKvPairs) `divInt` 1000
+        memUsed = memTotal - parseKB (snd . head . tail $ usageAsKvPairs) `div` 1000
+        memTotal = parseKB (snd . head $ usageAsKvPairs) `div` 1000
 
 getExeNameFromPath :: String -> String
-getExeNameFromPath = reverse . (takeWhile (/='/') . reverse)
+getExeNameFromPath = reverse . takeWhile (/='/') . reverse
 
 wslCheck :: Maybe String -> String
 wslCheck Nothing  = ""
