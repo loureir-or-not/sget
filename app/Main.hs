@@ -44,7 +44,7 @@ getUptime time
 
 
 getKernel :: String -> String
-getKernel = (\l -> head l ++ " " ++ (head . tail) l) . words
+getKernel l = (head . words $ l) ++ " " ++ (head . tail . tail . words $ l)
 
 parseKB :: String -> Int
 parseKB size = read . head . tail . words $ size :: Int
