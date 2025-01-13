@@ -24,9 +24,24 @@ findPrettyName (x:xs)
     | fst x == "PRETTY_NAME" = init . tail . tail $ snd x
     | otherwise = findPrettyName xs
 
-getUptime :: String -> String
-getUptime ""      = "0 seconds"
-getUptime seconds = (head . words $ seconds) ++ " seconds"
+getUptimeSeconds :: String -> Int
+getUptimeSeconds ""      = 0
+getUptimeSeconds seconds = floor (read . head . words $ seconds :: Float) 
+
+getUptime :: Int -> String
+getUptime time
+    | time < 60 = show time
+    | time < 3600 = formattedMS
+    | otherwise = formattedHMS
+        where
+            totalHours = time `div` 60
+            hours = totalHours `div` 60
+            minutes = totalHours `mod` 60
+            seconds = time `mod` 60
+            formattedS = show seconds ++ "secs"
+            formattedMS = show minutes ++ "mins, " ++ formattedS
+            formattedHMS = show hours ++ "hrs, " ++ formattedMS
+
 
 getKernel :: String -> String
 getKernel = (\l -> head l ++ " " ++ (head . tail) l) . words
@@ -50,8 +65,8 @@ wslCheck (Just _) = "Hey! I am using WSL!"
 
 getHostname :: String -> String
 getHostname s
-    | (null . lines) s = "Unknown" 
-    | otherwise = (head . lines) s
+    | null . lines $ s = "Unknown" 
+    | otherwise = head . lines $ s
 
 main :: IO ()
 main = do
@@ -68,15 +83,15 @@ main = do
     ram <- readFile' "/proc/meminfo"
     usingWSL <- lookupEnv "WSL_DISTRO_NAME"
     putStrLn (unlines
-        [ " \x1b[1;35m⠀⠀⢀⣤⣤⣤⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀\x1b[1;39m  " ++ user ++ "@" ++ filter (/='\n') (getHostname hostname)
+        [ " \x1b[1;35m⠀⠀⢀⣤⣤⣤⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀\x1b[1;39m  " ++ user ++ "@" ++ getHostname hostname
         , " \x1b[1;35m⠀⠀⢸⣿⣿⣿⣿⣿⣷⡀⠀⠀⠀⠀⠀⠀⠀\x1b[1;39m  "
-        , " \x1b[1;35m⠀⠀⠘⠉⠉⠙⣿⣿⣿⣷⠀⠀⠀⠀⠀⠀⠀\x1b[1;39m  " ++ "os\t    " ++ (findPrettyName . map (splitAt' '=')) (lines osRelease)
-        , " \x1b[1;35m⠀⠀⠀⠀⠀⠀⢸⣿⣿⣿⣧⠀⠀⠀⠀⠀⠀\x1b[1;39m  " ++ "wm\t    " ++ xdgDesktop ++ " (" ++ xdgSession ++ ")"
-        , " \x1b[1;35m⠀⠀⠀⠀⠀⠀⣼⣿⣿⣿⣿⣆⠀⠀⠀⠀⠀\x1b[1;39m  " ++ "locale  " ++ lang
-        , " \x1b[1;35m⠀⠀⠀⠀⠀⣼⣿⣿⣿⣿⣿⣿⡀⠀⠀⠀⠀\x1b[1;39m  " ++ "kernel  " ++ getKernel kernel
-        , " \x1b[1;35m⠀⠀⠀⠀⣴⣿⣿⣿⠟⣿⣿⣿⣷⠀⠀⠀⠀\x1b[1;39m  " ++ "uptime  " ++ getUptime uptime
-        , " \x1b[1;35m⠀⠀⠀⣰⣿⣿⣿⡏⠀⠸⣿⣿⣿⣇⠀⠀⠀\x1b[1;39m  " ++ "ram\t    " ++ getRamUsage ram
-        , " \x1b[1;35m⠀⠀⢠⣿⣿⣿⡟⠀⠀⠀⢻⣿⣿⣿⡆⠀⠀\x1b[1;39m  " ++ "shell   " ++ getExeNameFromPath shell
-        , " \x1b[1;35m⠀⢠⣿⣿⣿⡿⠀⠀⠀⠀⠀⢿⣿⣿⣷⣤⡄\x1b[1;39m  " ++ "editor  " ++ getExeNameFromPath editor
+        , " \x1b[1;35m⠀⠀⠘⠉⠉⠙⣿⣿⣿⣷⠀⠀⠀⠀⠀⠀⠀\x1b[1;39m  " ++ "os\t\t" ++ (findPrettyName . map (splitAt' '=')) (lines osRelease)
+        , " \x1b[1;35m⠀⠀⠀⠀⠀⠀⢸⣿⣿⣿⣧⠀⠀⠀⠀⠀⠀\x1b[1;39m  " ++ "wm\t\t" ++ xdgDesktop ++ " (" ++ xdgSession ++ ")"
+        , " \x1b[1;35m⠀⠀⠀⠀⠀⠀⣼⣿⣿⣿⣿⣆⠀⠀⠀⠀⠀\x1b[1;39m  " ++ "locale\t" ++ lang
+        , " \x1b[1;35m⠀⠀⠀⠀⠀⣼⣿⣿⣿⣿⣿⣿⡀⠀⠀⠀⠀\x1b[1;39m  " ++ "kernel\t" ++ getKernel kernel
+        , " \x1b[1;35m⠀⠀⠀⠀⣴⣿⣿⣿⠟⣿⣿⣿⣷⠀⠀⠀⠀\x1b[1;39m  " ++ "uptime\t" ++ getUptime (getUptimeSeconds uptime)
+        , " \x1b[1;35m⠀⠀⠀⣰⣿⣿⣿⡏⠀⠸⣿⣿⣿⣇⠀⠀⠀\x1b[1;39m  " ++ "ram\t\t" ++ getRamUsage ram
+        , " \x1b[1;35m⠀⠀⢠⣿⣿⣿⡟⠀⠀⠀⢻⣿⣿⣿⡆⠀⠀\x1b[1;39m  " ++ "shell\t" ++ getExeNameFromPath shell
+        , " \x1b[1;35m⠀⢠⣿⣿⣿⡿⠀⠀⠀⠀⠀⢿⣿⣿⣷⣤⡄\x1b[1;39m  " ++ "editor\t" ++ getExeNameFromPath editor
         , " \x1b[1;35m⢀⣾⣿⣿⣿⠁⠀⠀⠀⠀⠀⠈⠿⣿⣿⣿⡇\x1b[1;39m  " ++ wslCheck usingWSL
         ])
