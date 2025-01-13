@@ -48,6 +48,11 @@ wslCheck :: Maybe String -> String
 wslCheck Nothing  = ""
 wslCheck (Just _) = "Hey! I am using WSL!"
 
+getHostname :: String -> String
+getHostname s
+    | (null . lines) s = "Unknown" 
+    | otherwise = (head . lines) s
+
 main :: IO ()
 main = do
     user <- lookupEnv' "USER"
@@ -56,14 +61,14 @@ main = do
     xdgDesktop <- lookupEnv' "XDG_CURRENT_DESKTOP"
     shell <- lookupEnv' "SHELL"
     editor <- lookupEnv' "EDITOR"
-    hostname <- lookupEnv' "NAME"
+    hostname <- readFile' "/etc/hostname"
     osRelease <- readFile' "/etc/os-release"
     kernel <- readFile' "/proc/version"
     uptime <- readFile' "/proc/uptime"
     ram <- readFile' "/proc/meminfo"
     usingWSL <- lookupEnv "WSL_DISTRO_NAME"
     putStrLn (unlines
-        [ " \x1b[1;35m⠀⠀⢀⣤⣤⣤⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀\x1b[1;39m  " ++ user ++ "@" ++ filter (/='\n') hostname
+        [ " \x1b[1;35m⠀⠀⢀⣤⣤⣤⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀\x1b[1;39m  " ++ user ++ "@" ++ filter (/='\n') (getHostname hostname)
         , " \x1b[1;35m⠀⠀⢸⣿⣿⣿⣿⣿⣷⡀⠀⠀⠀⠀⠀⠀⠀\x1b[1;39m  "
         , " \x1b[1;35m⠀⠀⠘⠉⠉⠙⣿⣿⣿⣷⠀⠀⠀⠀⠀⠀⠀\x1b[1;39m  " ++ "os\t    " ++ (findPrettyName . map (splitAt' '=')) (lines osRelease)
         , " \x1b[1;35m⠀⠀⠀⠀⠀⠀⢸⣿⣿⣿⣧⠀⠀⠀⠀⠀⠀\x1b[1;39m  " ++ "wm\t    " ++ xdgDesktop ++ " (" ++ xdgSession ++ ")"
