@@ -26,7 +26,7 @@ findPrettyName (x:xs)
 
 getUptimeSeconds :: String -> Int
 getUptimeSeconds ""      = 0
-getUptimeSeconds seconds = floor (read . head . words $ seconds :: Float) 
+getUptimeSeconds seconds = floor (read . head . words $ seconds :: Float)
 
 getUptime :: Int -> String
 getUptime time
@@ -42,9 +42,9 @@ getUptime time
             formattedMS = show minutes ++ "mins, " ++ formattedS
             formattedHMS = show hours ++ "hrs, " ++ formattedMS
 
-
-getKernel :: String -> String
-getKernel l = (head . words $ l) ++ " " ++ (head . tail . tail . words $ l)
+getKernel :: [String] -> String
+getKernel [] = ""
+getKernel (k:ks) = k ++ " " ++ (head . tail) ks
 
 parseKB :: String -> Int
 parseKB size = read . head . tail . words $ size :: Int
@@ -65,7 +65,7 @@ wslCheck (Just _) = "Hey! I am using WSL!"
 
 getHostname :: String -> String
 getHostname s
-    | null . lines $ s = "Unknown" 
+    | null . lines $ s = "Unknown"
     | otherwise = head . lines $ s
 
 main :: IO ()
@@ -88,7 +88,7 @@ main = do
         , " \x1b[1;35m⠀⠀⠘⠉⠉⠙⣿⣿⣿⣷⠀⠀⠀⠀⠀⠀⠀\x1b[1;39m  " ++ "os\t\t" ++ (findPrettyName . map (splitAt' '=')) (lines osRelease)
         , " \x1b[1;35m⠀⠀⠀⠀⠀⠀⢸⣿⣿⣿⣧⠀⠀⠀⠀⠀⠀\x1b[1;39m  " ++ "wm\t\t" ++ xdgDesktop ++ " (" ++ xdgSession ++ ")"
         , " \x1b[1;35m⠀⠀⠀⠀⠀⠀⣼⣿⣿⣿⣿⣆⠀⠀⠀⠀⠀\x1b[1;39m  " ++ "locale\t" ++ lang
-        , " \x1b[1;35m⠀⠀⠀⠀⠀⣼⣿⣿⣿⣿⣿⣿⡀⠀⠀⠀⠀\x1b[1;39m  " ++ "kernel\t" ++ getKernel kernel
+        , " \x1b[1;35m⠀⠀⠀⠀⠀⣼⣿⣿⣿⣿⣿⣿⡀⠀⠀⠀⠀\x1b[1;39m  " ++ "kernel\t" ++ getKernel (words kernel)
         , " \x1b[1;35m⠀⠀⠀⠀⣴⣿⣿⣿⠟⣿⣿⣿⣷⠀⠀⠀⠀\x1b[1;39m  " ++ "uptime\t" ++ getUptime (getUptimeSeconds uptime)
         , " \x1b[1;35m⠀⠀⠀⣰⣿⣿⣿⡏⠀⠸⣿⣿⣿⣇⠀⠀⠀\x1b[1;39m  " ++ "ram\t\t" ++ getRamUsage ram
         , " \x1b[1;35m⠀⠀⢠⣿⣿⣿⡟⠀⠀⠀⢻⣿⣿⣿⡆⠀⠀\x1b[1;39m  " ++ "shell\t" ++ getExeNameFromPath shell
